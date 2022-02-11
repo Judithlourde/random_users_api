@@ -1,11 +1,10 @@
 <template>
-	<!-- <div>Home view</div> -->
+	<h1 class="title">{{ title }}</h1>
 
-	<h1>{{ title }}</h1>
 	<div class="users">
-		<h3>{{ name }}</h3>
-		<img :src="image" alt="">
-		<button v-on:click="fetchNew">Get New User</button>
+		<h3 class="user-name">{{ name }}</h3>
+		<img class="user-image" :src="image" alt="">
+		<button class="get-user" @click="fetchNew">Get New User</button>
 	</div>
 
 	<ul class="address"> 
@@ -59,11 +58,11 @@
 </script>
 
 <style>
-	h1 {
+	.title {
 		text-align: center;
 	}
 
-	button {
+	.get-user {
 		padding: 10px;
 		background-color: rgb(202, 215, 186);	
 		border-radius: 15px;
@@ -76,21 +75,22 @@
 		align-items: center;
 	}
 
-	h3 {
+	.user-name {
 		margin-bottom: 10px;
 	}
 
-	img {
+	.user-image {
 		margin-bottom: 15px;
-		width: 100px;
+		width: 200px;
+		border: 1px solid #eee;
 		border-radius: 100%;
 	}
 
-	ul {
+	.address {
 		text-align: center;
 	}
 
-	ul li {
+	.address li {
 		text-align: center;
 		list-style: none;
 	}
