@@ -30,25 +30,40 @@
                 nameValue: '',
                 people: [],
                 personEmail: '',
+                firstName: '',
+                lastName: '',
             }  
         },
 
         created() {
             // console.log('started');
             this.fetchData();
-            this.sumThis();
+            // this.sumThis();
             
         },
 
         methods: {
             async fetchData() {
                 const url = 'https://randomuser.me/api/?page=2&results=20';
-                const res = await fetch(url);
-                const { results } = await res.json()
-                // console.log(results); 
+                const response = await fetch(url);
+                const { results } = await response.json()
+                console.log(results); 
                 this.people = results;
-                // console.log(this.people)
+                console.log(this.people)
+
+                const client_id_key = import.meta.env.VITE_UNSPLASH_ACCES_KEY;
+                console.log(client_id_key);
+
+                const unsplashUrl = `https://api.unsplash.com/photos/random/?client_id=${client_id_key}`;
+                const responseUnsplash = await fetch(unsplashUrl);
+                const output = await responseUnsplash.json();
+
+                console.log(output);
             },
+
+            
+
+
 
             findPerson() {
                 const person = this.people.find(user => {

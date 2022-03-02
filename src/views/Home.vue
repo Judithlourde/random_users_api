@@ -2,9 +2,11 @@
 	<h1 class="title">{{ title }}</h1>
 
 	<div class="users">
-		<h3 class="user-name">{{ name }}</h3>
-		<img class="user-image" :src="image" alt="">
-		<button class="get-user" @click="fetchNew">Get New User</button>
+		<h3 class="user-name">{{ firstName }}</h3>
+		<h3 class="user-name">{{ lastName }}</h3>
+		<img class="user-image" :src="image" alt="user-image">
+		<button class="get-user" @click="fetchData">Get New User</button>
+		<p v-if="error" class="error">{{ error }}</p>
 	</div>
 
 	<ul class="address"> 
@@ -22,16 +24,19 @@
 		data() {
 			return {
 				title: 'Users',
-				name: '',
+				firstName: '',
+				lastName: '',
 				email: '',
 				image: '',
 				street: '',
 				address: '',
+				error: '',
 			}
 		},
 		
-		created() {
-			this.fetchNew();
+		created: function() {
+			// this.fetchNew();
+			this.fetchData();
 			// const  result  = await res.json();
 			// console.log(result.result[0]);
 			// this.title = 'New Users';
@@ -39,20 +44,65 @@
 
 		mounted() {
 			// this.title = 'New Users2';
+			//this.$store.dispatch("setCurrentUser");
 
 		},
 
 		methods: {
-			async fetchNew() {
-				const url = 'https://randomuser.me/api';
-				const res = await fetch(url);
-				const { results } = await res.json();
-				console.log(results);
-				this.name = `${results[0].name.first} ${results[0].name.last}`;
-				this.image = results[0].picture.large;
-				this.address = results[0].location;
-				this.street = results[0].location.street;
-			}
+			// async fetchNew() {
+			// 	const url = 'https://randomuser.me/api';
+			// 	const res = await fetch(url);
+			// 	const { results } = await res.json();
+			// 	console.log(results);
+			// 	this.name = `${results[0].name.first} ${results[0].name.last}`;
+			// 	this.image = results[0].picture.large;
+			// 	this.address = results[0].location;
+			// 	this.street = results[0].location.street;
+			// },
+
+			async fetchData() {
+                const url = 'https://randomuser.me/api/';
+                const response = await fetch(url);
+				try {
+					await this.handleResponse(response);
+				} catch (error) {
+					console.log(error);
+					this.error = error.message;
+					// console.log(error.message);
+					// console.log(error.name);
+
+				}
+                
+            },
+
+            async handleResponse(response) {
+                console.log(response);
+                if(response.status >= 200 && response.status < 300) {
+                    console.log('ok');
+                    const { results } = await response.json();
+                    this.firstName = results[0].name.first;
+                    this.lastName = results[0].name.last;
+                    this.image = results[0].picture.large;
+					return true;
+
+                } else {
+					console.log('feil');
+					if(response.status === 404) {
+						console.log('url ikke funnet');
+						throw new Error('Url ikke funnet!');
+					}
+					if(response.status === 401) {
+						console.log('ikke authorisert');
+						throw new Error('ikke authorisert');
+					}
+					if(response.status > 500) {
+						console.log('server error');
+						throw new Error('Servor error!');
+					}
+					console.log('')
+					throw new Error('Noe gikk galt!');
+				}
+            },
 		}
 	}
 </script>
