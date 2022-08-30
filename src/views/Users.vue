@@ -93,7 +93,6 @@
                 const sum = numbers.reduce((result, numb) => {
                     return numb + result;
                 }, 0);
-                console.log(sum);
             }
         }
     }
